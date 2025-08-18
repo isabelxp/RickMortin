@@ -1,6 +1,7 @@
 package com.android.rickandmorty.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,14 +18,20 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun NavGraph(viewModel: ListMainViewModel,
-             navController: NavHostController = rememberNavController()) {
-        NavHost(navController = navController, startDestination = "post_list") {
+fun NavGraph(
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(navController = navController, startDestination = "post_list") {
 
         composable("post_list") {
-            ListCharacterScreen(viewModel,
+            val viewModel: ListMainViewModel = hiltViewModel()
+            ListCharacterScreen(
+                viewModel = viewModel,
                 onPostClick = { post ->
-                    val json = URLEncoder.encode(Gson().toJson(post), StandardCharsets.UTF_8.toString())
+                    val json = URLEncoder.encode(
+                        Gson().toJson(post),
+                        StandardCharsets.UTF_8.toString()
+                    )
                     navController.navigate("post_detail/$json")
                 }
             )
@@ -41,3 +48,4 @@ fun NavGraph(viewModel: ListMainViewModel,
         }
     }
 }
+
